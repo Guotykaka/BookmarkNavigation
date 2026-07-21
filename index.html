@@ -677,7 +677,7 @@
     });
     setTheme(document.documentElement.classList.contains('dark'));
 
-    // —— 页脚网络时间（东八区，按 UTC 时间戳校准）——
+    // —— 页脚网络时间（多源毫秒时间戳取中位数，东八区显示）——
     let netOffset = 0;
     let timeSynced = false;
     const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
@@ -690,7 +690,6 @@
       return String(n).padStart(2, '0');
     }
 
-    // 中国无夏令时：用 UTC 毫秒直接换算东八区，避免浏览器时区/小时制解析坑
     function tickClock() {
       if (!timeSynced) return;
       const sh = new Date(networkNowMs() + 8 * 3600 * 1000);
@@ -698,69 +697,73 @@
       const m = sh.getUTCMonth() + 1;
       const d = sh.getUTCDate();
       const w = WEEK[sh.getUTCDay()];
-      const hh = pad(sh.getUTCHours());
-      const mm = pad(sh.getUTCMinutes());
-      const ss = pad(sh.getUTCSeconds());
-      $('clock').textContent = `${hh}:${mm}:${ss}`;
+      $('clock').textContent = `${pad(sh.getUTCHours())}:${pad(sh.getUTCMinutes())}:${pad(sh.getUTCSeconds())}`;
       $('dateLine').textContent = `${y}年${m}月${d}日 星期${w}`;
     }
 
-    function shanghaiPartsToUtcMs(y, m, d, h, min, s, ms = 0) {
-      return Date.UTC(y, m - 1, d, h - 8, min, s, ms);
+    function toMs(v) {
+      const n = Number(v);
+      if (!Number.isFinite(n) || n <= 0) throw new Error('bad ts');
+      // 10 位秒级 → 毫秒
+      return n < 1e12 ? Math.round(n * 1000) : Math.round(n);
+    }
+
+    async function probeTime(name, url, parse) {
+      const t0 = Date.now();
+      const res = await fetch(url, {cache: 'no-store', mode: 'cors'});
+      const t1 = Date.now();
+      if (!res.ok) throw new Error(name + '-http');
+      const serverMs = toMs(await parse(res));
+      const mid = Math.round((t0 + t1) / 2);
+      return {name, offset: serverMs - mid, rtt: t1 - t0};
     }
 
     async function syncNetworkTime() {
       $('clock').textContent = '--:--:--';
       $('dateLine').textContent = '正在同步网络时间…';
 
-      const sources = [
-        // 1) 苏宁毫秒时间戳（UTC epoch，最不易出错）
-        async () => {
-          const res = await fetch('https://f.m.suning.com/api/ct.do', {cache: 'no-store'});
-          if (!res.ok) throw new Error('suning-ct');
+      // 实测 timeapi.io 会慢约 9 分钟，已剔除
+      const jobs = [
+        probeTime('suning', 'https://f.m.suning.com/api/ct.do', async res => {
           const d = await res.json();
-          const t = Number(d.currentTime);
-          if (!Number.isFinite(t) || t < 1e12) throw new Error('suning-ct-invalid');
-          return t;
-        },
-        // 2) timeapi.io：用年月日时分秒按东八区换算，不拼接 ISO 字符串
-        async () => {
-          const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Shanghai', {cache: 'no-store'});
-          if (!res.ok) throw new Error('timeapi.io');
+          return d.currentTime;
+        }),
+        probeTime('maketimestamp', 'https://maketimestamp.com/api/v1/current?precision=milliseconds&timezone=Asia/Shanghai', async res => {
           const d = await res.json();
-          const t = shanghaiPartsToUtcMs(d.year, d.month, d.day, d.hour, d.minute, d.seconds, d.milliSeconds || 0);
-          if (!Number.isFinite(t)) throw new Error('timeapi-invalid');
-          return t;
-        },
-        // 3) time.now unix
-        async () => {
-          const res = await fetch('https://time.now/developer/api/timezone/Asia/Shanghai', {cache: 'no-store'});
-          if (!res.ok) throw new Error('time.now');
+          return d.milliseconds;
+        }),
+        probeTime('pdd', 'https://api.pinduoduo.com/api/server/_stm', async res => {
           const d = await res.json();
-          if (d.unixtime) return Number(d.unixtime) * 1000;
-          throw new Error('time.now-invalid');
-        },
+          return d.server_time;
+        }),
+        probeTime('mi', 'https://tptm.hd.mi.com/gettimestamp', async res => {
+          const txt = await res.text();
+          const m = txt.match(/(\d{10,13})/);
+          if (!m) throw new Error('mi-parse');
+          return m[1];
+        }),
       ];
 
-      let lastErr;
-      for (const src of sources) {
-        try {
-          const t0 = Date.now();
-          const serverMs = await src();
-          const t1 = Date.now();
-          // 用请求往返中点估算，减小网络延迟误差
-          netOffset = serverMs - Math.round((t0 + t1) / 2);
-          timeSynced = true;
-          tickClock();
-          return;
-        } catch (e) {
-          lastErr = e;
-        }
+      const results = await Promise.allSettled(jobs);
+      const ok = results
+        .filter(r => r.status === 'fulfilled')
+        .map(r => r.value)
+        .sort((a, b) => a.offset - b.offset);
+
+      if (!ok.length) {
+        timeSynced = false;
+        $('clock').textContent = '--:--:--';
+        $('dateLine').textContent = '网络时间同步失败';
+        console.warn('network time sync failed', results);
+        return;
       }
-      timeSynced = false;
-      $('clock').textContent = '--:--:--';
-      $('dateLine').textContent = '网络时间同步失败';
-      console.warn('network time sync failed', lastErr);
+
+      // 多源中位数，避免单个源漂移
+      const mid = ok[Math.floor(ok.length / 2)].offset;
+      netOffset = mid;
+      timeSynced = true;
+      tickClock();
+      console.info('network time sources', ok.map(x => `${x.name}:${x.offset}ms/${x.rtt}ms`), 'use', mid);
     }
 
     syncNetworkTime();
