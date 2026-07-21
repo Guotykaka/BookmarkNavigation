@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ergulum</title>
+  <script>
+    if (localStorage.getItem('ergulum_theme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500&family=Outfit:wght@500;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #fff;
+      --text: #202124;
+      --muted: #70757a;
+      --muted-2: #5f6368;
+      --border: #dfe1e5;
+      --hover: #f1f3f4;
+      --surface: #fff;
+      --footer-bg: #f8f9fa;
+      --footer-border: #e8eaed;
+      --shadow: rgba(32, 33, 36, .28);
+      --active-bg: #e8f0fe;
+      --active-text: #1967d2;
+      --dropdown-shadow: rgba(0, 0, 0, .2);
+      --font-sans: "Manrope", "Noto Sans SC", sans-serif;
+      --font-display: "Outfit", "Manrope", "Noto Sans SC", sans-serif;
+    }
+
+    html.dark {
+      --bg: #202124;
+      --text: #e8eaed;
+      --muted: #9aa0a6;
+      --muted-2: #9aa0a6;
+      --border: #5f6368;
+      --hover: #303134;
+      --surface: #303134;
+      --footer-bg: #121212;
+      --footer-border: #3c4043;
+      --shadow: rgba(0, 0, 0, .5);
+      --active-bg: #394457;
+      --active-text: #8ab4f8;
+      --dropdown-shadow: rgba(0, 0, 0, .5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background .2s, color .2s;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 28px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .top-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .top-bar a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .top-bar a:hover {
+      text-decoration: underline;
+    }
+
+    .theme-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-2);
+    }
+
+    .theme-btn:hover {
+      background: var(--hover);
+    }
+
+    .theme-btn .icon-moon {
+      display: none;
+    }
+
+    html.dark .theme-btn .icon-sun {
+      display: none;
+    }
+
+    html.dark .theme-btn .icon-moon {
+      display: block;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 12vh;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 28px;
+      user-select: none;
+    }
+
+    .logo span:nth-child(1) {
+      color: #4285f4;
+    }
+
+    .logo span:nth-child(2) {
+      color: #ea4335;
+    }
+
+    .logo span:nth-child(3) {
+      color: #fbbc05;
+    }
+
+    .logo span:nth-child(4) {
+      color: #4285f4;
+    }
+
+    .logo span:nth-child(5) {
+      color: #34a853;
+    }
+
+    .logo span:nth-child(6) {
+      color: #ea4335;
+    }
+
+    .logo span:nth-child(7) {
+      color: #4285f4;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(560px, 90vw);
+    }
+
+    .search-box {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      height: 46px;
+      padding: 0 8px 0 14px;
+      transition: box-shadow .2s, background .2s, border-color .2s;
+      background: var(--surface);
+    }
+
+    .search-box:hover,
+    .search-box:focus-within {
+      box-shadow: 0 1px 6px var(--shadow);
+      border-color: transparent;
+    }
+
+    .engine-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 16px;
+      font-size: 13px;
+      color: var(--muted-2);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .engine-btn:hover {
+      background: var(--hover);
+    }
+
+    .engine-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      padding: 0 10px;
+      height: 100%;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .search-submit {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .search-submit:hover {
+      background: var(--hover);
+    }
+
+    .search-submit svg {
+      fill: #4285f4;
+    }
+
+    .engine-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--surface);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px var(--dropdown-shadow);
+      padding: 8px 0;
+      min-width: 180px;
+      max-height: 320px;
+      overflow-y: auto;
+      display: none;
+      z-index: 10;
+    }
+
+    .engine-dropdown.show {
+      display: block;
+    }
+
+    .engine-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .engine-option:hover {
+      background: var(--hover);
+    }
+
+    .engine-option.active {
+      background: var(--active-bg);
+      color: var(--active-text);
+    }
+
+    .nav-section {
+      margin-top: 40px;
+      width: min(720px, 92vw);
+    }
+
+    .nav-title {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 8px 4px;
+      justify-items: center;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 80px;
+      padding: 12px 4px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-item:hover {
+      background: var(--hover);
+    }
+
+    .nav-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--muted-2);
+    }
+
+    .nav-icon img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .nav-name {
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      max-width: 72px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding: 14px 32px;
+      color: var(--muted);
+      border-top: 1px solid var(--footer-border);
+      background: var(--footer-bg);
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .footer-brand .name {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .footer-brand .note {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .footer-meta {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin-left: auto;
+      background: var(--surface);
+      border: 1px solid var(--footer-border);
+      border-radius: 999px;
+      padding: 6px 4px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1px;
+      padding: 4px 18px;
+      min-width: 0;
+    }
+
+    .meta-item+.meta-item {
+      border-left: 1px solid var(--footer-border);
+    }
+
+    .meta-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1;
+    }
+
+    .meta-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.35;
+    }
+
+    .meta-value.clock {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .meta-weather {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .meta-weather .temp {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .meta-weather .city,
+    .meta-weather .desc {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted-2);
+    }
+
+    @media (max-width: 800px) {
+      .footer {
+        padding: 12px 16px;
+        gap: 12px;
+      }
+
+      .footer-brand {
+        width: 100%;
+      }
+
+      .footer-meta {
+        width: 100%;
+        margin-left: 0;
+        border-radius: 14px;
+        flex-direction: column;
+        padding: 4px 0;
+      }
+
+      .meta-item+.meta-item {
+        border-left: none;
+        border-top: 1px solid var(--footer-border);
+      }
+
+      .meta-item {
+        padding: 10px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top-bar">
+    <button type="button" class="theme-btn" id="themeBtn" title="切换深色模式" aria-label="切换深色模式">
+      <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 18a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zM3 11a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2H3zm17 0a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2h-1zM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 0 1 6.34 9l-.71-.71a1 1 0 0 1 0-1.41zm12.02 12.02a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.71a1 1 0 0 1 0-1.41zM18.36 5.64a1 1 0 0 1 0 1.41L17.66 7.8a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.4 0zM6.34 16.24a1 1 0 0 1 0 1.41l-.71.71A1 1 0 1 1 4.22 17l.71-.71a1 1 0 0 1 1.41 0z" />
+      </svg>
+      <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.1 2a1 1 0 0 1 .9 1.45A7.5 7.5 0 1 0 19.55 13a1 1 0 0 1 1.9.1A9.5 9.5 0 1 1 12.1 2z" />
+      </svg>
+    </button>
+    <div class="top-links">
+      <a href="https://mail.google.com" target="_blank">Gmail</a>
+      <a href="https://www.baidu.com" target="_blank">百度</a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="logo">
+      <span>E</span><span>r</span><span>g</span><span>u</span><span>l</span><span>u</span><span>m</span>
+    </div>
+
+    <div class="search-wrap">
+      <form class="search-box" id="searchForm" autocomplete="off">
+        <button type="button" class="engine-btn" id="engineBtn" title="切换搜索引擎">
+          <span class="engine-icon" id="engineIcon" style="background:#2932e1">百</span>
+          <span id="engineName">百度</span>
+          <svg width="12" height="12" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M7 10l5 5 5-5z" />
+          </svg>
+        </button>
+        <input class="search-input" id="searchInput" type="text" placeholder="搜索一下" autofocus />
+        <button type="submit" class="search-submit" title="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path
+              d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+          </svg>
+        </button>
+      </form>
+      <div class="engine-dropdown" id="engineDropdown"></div>
+    </div>
+
+    <section class="nav-section">
+      <div class="nav-title">快捷导航</div>
+      <div class="nav-grid" id="navGrid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand">
+      <span class="name">Ergulum</span>
+      <span class="note">拉丁语 ergo + -ulum</span>
+    </div>
+    <div class="footer-meta">
+      <div class="meta-item">
+        <span class="meta-label">北京时间</span>
+        <span class="meta-value clock" id="clock">00:00:00</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">日期</span>
+        <span class="meta-value" id="dateLine">—</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">天气</span>
+        <div class="meta-weather" id="weatherLine">
+          <span class="city">定位中</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const ENGINES = [
+      {id: 'baidu', name: '百度', color: '#2932e1', text: '百', url: 'https://www.baidu.com/s?wd='},
+      {id: 'google', name: 'Google', color: '#4285f4', text: 'G', url: 'https://www.google.com/search?q='},
+      {id: 'bing', name: '必应', color: '#00809d', text: 'B', url: 'https://www.bing.com/search?q='},
+      {id: 'perplexity', name: 'Perplexity', color: '#20808d', text: 'P', url: 'https://www.perplexity.ai/search?q='},
+      {id: 'chatgpt', name: 'ChatGPT', color: '#10a37f', text: 'GPT', url: 'https://chatgpt.com/?hints=search&q='},
+      {id: 'metaso', name: '秘塔AI', color: '#1a1a1a', text: '秘', url: 'https://metaso.cn/?q='},
+      {id: 'gemini', name: 'Gemini', color: '#8e75b2', text: 'Ge', url: 'https://www.google.com/search?udm=50&q='},
+      {id: 'copilot', name: 'Copilot', color: '#0078d4', text: 'C', url: 'https://www.bing.com/chat?q='},
+      {id: 'felo', name: 'Felo', color: '#6366f1', text: 'F', url: 'https://felo.ai/search?q='},
+    ];
+
+    const NAVS = [
+      {name: 'Kimi', url: 'https://www.kimi.com'},
+      {name: '豆包', url: 'https://www.doubao.com'},
+      {name: 'DeepSeek', url: 'https://chat.deepseek.com'},
+      {name: 'GitHub', url: 'https://github.com'},
+      {name: '知乎', url: 'https://www.zhihu.com'},
+      {name: 'Bilibili', url: 'https://www.bilibili.com'},
+      {name: '微博', url: 'https://weibo.com'},
+      {name: '淘宝', url: 'https://www.taobao.com'},
+    ];
+
+    let currentEngine = ENGINES[0];
+
+    const $ = id => document.getElementById(id);
+    const engineBtn = $('engineBtn');
+    const engineDropdown = $('engineDropdown');
+    const engineIcon = $('engineIcon');
+    const engineName = $('engineName');
+    const searchInput = $('searchInput');
+    const searchForm = $('searchForm');
+    const navGrid = $('navGrid');
+
+    function setEngine(engine) {
+      currentEngine = engine;
+      engineIcon.style.background = engine.color;
+      engineIcon.textContent = engine.text;
+      engineName.textContent = engine.name;
+      engineDropdown.classList.remove('show');
+    }
+
+    function renderEngines() {
+      engineDropdown.innerHTML = ENGINES.map(e => `
+        <button type="button" class="engine-option ${e.id === currentEngine.id ? 'active' : ''}" data-id="${e.id}">
+          <span class="engine-icon" style="background:${e.color}">${e.text}</span>
+          ${e.name}
+        </button>
+      `).join('');
+    }
+
+    function favicon(url) {
+      try {
+        return `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=64`;
+      } catch {
+        return '';
+      }
+    }
+
+    function renderNavs() {
+      navGrid.innerHTML = NAVS.map(n => `
+        <a class="nav-item" href="${n.url}" target="_blank" rel="noopener">
+          <div class="nav-icon">
+            <img src="${favicon(n.url)}" alt="" onerror="this.remove();this.parentNode.textContent='${n.name.charAt(0)}'" />
+          </div>
+          <span class="nav-name" title="${n.name}">${n.name}</span>
+        </a>
+      `).join('');
+    }
+
+    function doSearch() {
+      const q = searchInput.value.trim();
+      if (!q) {searchInput.focus(); return;}
+      window.open(currentEngine.url + encodeURIComponent(q), '_blank');
+    }
+
+    engineBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      renderEngines();
+      engineDropdown.classList.toggle('show');
+    });
+
+    engineDropdown.addEventListener('click', e => {
+      const btn = e.target.closest('.engine-option');
+      if (!btn) return;
+      setEngine(ENGINES.find(x => x.id === btn.dataset.id));
+    });
+
+    document.addEventListener('click', () => engineDropdown.classList.remove('show'));
+
+    searchForm.addEventListener('submit', e => {
+      e.preventDefault();
+      doSearch();
+    });
+
+    setEngine(currentEngine);
+    renderNavs();
+
+    const themeBtn = $('themeBtn');
+    function setTheme(dark) {
+      document.documentElement.classList.toggle('dark', dark);
+      localStorage.setItem('ergulum_theme', dark ? 'dark' : 'light');
+      themeBtn.title = dark ? '切换浅色模式' : '切换深色模式';
+    }
+    themeBtn.addEventListener('click', () => {
+      setTheme(!document.documentElement.classList.contains('dark'));
+    });
+    setTheme(document.documentElement.classList.contains('dark'));
+
+    // —— 页脚网络时间（东八区，按 UTC 时间戳校准）——
+    let netOffset = 0;
+    let timeSynced = false;
+    const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+
+    function networkNowMs() {
+      return Date.now() + netOffset;
+    }
+
+    function pad(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    // 中国无夏令时：用 UTC 毫秒直接换算东八区，避免浏览器时区/小时制解析坑
+    function tickClock() {
+      if (!timeSynced) return;
+      const sh = new Date(networkNowMs() + 8 * 3600 * 1000);
+      const y = sh.getUTCFullYear();
+      const m = sh.getUTCMonth() + 1;
+      const d = sh.getUTCDate();
+      const w = WEEK[sh.getUTCDay()];
+      const hh = pad(sh.getUTCHours());
+      const mm = pad(sh.getUTCMinutes());
+      const ss = pad(sh.getUTCSeconds());
+      $('clock').textContent = `${hh}:${mm}:${ss}`;
+      $('dateLine').textContent = `${y}年${m}月${d}日 星期${w}`;
+    }
+
+    function shanghaiPartsToUtcMs(y, m, d, h, min, s, ms = 0) {
+      return Date.UTC(y, m - 1, d, h - 8, min, s, ms);
+    }
+
+    async function syncNetworkTime() {
+      $('clock').textContent = '--:--:--';
+      $('dateLine').textContent = '正在同步网络时间…';
+
+      const sources = [
+        // 1) 苏宁毫秒时间戳（UTC epoch，最不易出错）
+        async () => {
+          const res = await fetch('https://f.m.suning.com/api/ct.do', {cache: 'no-store'});
+          if (!res.ok) throw new Error('suning-ct');
+          const d = await res.json();
+          const t = Number(d.currentTime);
+          if (!Number.isFinite(t) || t < 1e12) throw new Error('suning-ct-invalid');
+          return t;
+        },
+        // 2) timeapi.io：用年月日时分秒按东八区换算，不拼接 ISO 字符串
+        async () => {
+          const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Shanghai', {cache: 'no-store'});
+          if (!res.ok) throw new Error('timeapi.io');
+          const d = await res.json();
+          const t = shanghaiPartsToUtcMs(d.year, d.month, d.day, d.hour, d.minute, d.seconds, d.milliSeconds || 0);
+          if (!Number.isFinite(t)) throw new Error('timeapi-invalid');
+          return t;
+        },
+        // 3) time.now unix
+        async () => {
+          const res = await fetch('https://time.now/developer/api/timezone/Asia/Shanghai', {cache: 'no-store'});
+          if (!res.ok) throw new Error('time.now');
+          const d = await res.json();
+          if (d.unixtime) return Number(d.unixtime) * 1000;
+          throw new Error('time.now-invalid');
+        },
+      ];
+
+      let lastErr;
+      for (const src of sources) {
+        try {
+          const t0 = Date.now();
+          const serverMs = await src();
+          const t1 = Date.now();
+          // 用请求往返中点估算，减小网络延迟误差
+          netOffset = serverMs - Math.round((t0 + t1) / 2);
+          timeSynced = true;
+          tickClock();
+          return;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      timeSynced = false;
+      $('clock').textContent = '--:--:--';
+      $('dateLine').textContent = '网络时间同步失败';
+      console.warn('network time sync failed', lastErr);
+    }
+
+    syncNetworkTime();
+    setInterval(tickClock, 1000);
+    setInterval(syncNetworkTime, 10 * 60 * 1000);
+
+    // —— 腾讯地图 IP 定位 + Open-Meteo 天气 ——
+    const QQ_MAP_KEY = 'RPBBZ-SH66W-TUSRQ-3J7U3-JUFBS-VSFDC';
+    const LS_LOC = 'ergulum_location';
+    const WMO = {
+      0: '晴', 1: '主要晴朗', 2: '少云', 3: '阴天',
+      45: '雾', 48: '雾凇',
+      51: '小毛毛雨', 53: '毛毛雨', 55: '大毛毛雨',
+      61: '小雨', 63: '中雨', 65: '大雨',
+      71: '小雪', 73: '中雪', 75: '大雪',
+      80: '小阵雨', 81: '阵雨', 82: '强阵雨',
+      85: '小阵雪', 86: '强阵雪',
+      95: '雷阵雨', 96: '雷阵雨伴冰雹', 99: '强雷暴冰雹',
+    };
+
+    function jsonp(url) {
+      return new Promise((resolve, reject) => {
+        const cb = `_qqip_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        const script = document.createElement('script');
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error('定位超时'));
+        }, 10000);
+        function cleanup() {
+          clearTimeout(timer);
+          delete window[cb];
+          script.remove();
+        }
+        window[cb] = data => {
+          cleanup();
+          resolve(data);
+        };
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('定位请求失败'));
+        };
+        script.src = `${url}${url.includes('?') ? '&' : '?'}output=jsonp&callback=${cb}`;
+        document.head.appendChild(script);
+      });
+    }
+
+    async function fetchWeather(loc) {
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lng}&current=temperature_2m,weather_code&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const cur = data.current;
+        const desc = WMO[cur.weather_code] || '未知';
+        $('weatherLine').innerHTML = `
+          <span class="city">${loc.address}</span>
+          <span class="temp">${Math.round(cur.temperature_2m)}°</span>
+          <span class="desc">${desc}</span>
+        `;
+      } catch {
+        $('weatherLine').innerHTML = `<span class="city">${loc.address}</span><span class="desc">天气获取失败</span>`;
+      }
+    }
+
+    async function locateByTencentIP() {
+      $('weatherLine').innerHTML = `<span class="city">正在定位…</span>`;
+      const data = await jsonp(`https://apis.map.qq.com/ws/location/v1/ip?key=${QQ_MAP_KEY}`);
+      if (data.status !== 0 || !data.result) {
+        throw new Error(data.message || 'IP 定位失败');
+      }
+      const {location, ad_info: ad} = data.result;
+      const address = [ad.province, ad.city, ad.district]
+        .filter(Boolean)
+        .filter((v, i, arr) => arr.indexOf(v) === i)
+        .join('') || ad.nation || '未知地区';
+      const loc = {
+        lat: location.lat,
+        lng: location.lng,
+        address,
+        ip: data.result.ip || '',
+      };
+      localStorage.setItem(LS_LOC, JSON.stringify(loc));
+      return loc;
+    }
+
+    async function initLocationWeather() {
+      try {
+        let loc = null;
+        try {
+          loc = JSON.parse(localStorage.getItem(LS_LOC) || 'null');
+        } catch {loc = null;}
+
+        if (!loc || loc.lat == null || loc.lng == null || !loc.address) {
+          loc = await locateByTencentIP();
+        }
+        await fetchWeather(loc);
+      } catch (err) {
+        $('weatherLine').innerHTML = `<span class="desc">${err.message || '定位失败'}</span>`;
+      }
+    }
+
+    initLocationWeather();
+  </script>
+</body>
+
+</html>
