@@ -466,6 +466,201 @@
       color: var(--muted-2);
     }
 
+    .mu-panel {
+      position: fixed;
+      left: 16px;
+      top: 110px;
+      width: 248px;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      pointer-events: none;
+    }
+
+    .mu-panel>* {
+      pointer-events: auto;
+    }
+
+    .mu-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px;
+    }
+
+    .mu-crest {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .mu-head-text {
+      min-width: 0;
+    }
+
+    .mu-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .mu-sub {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .mu-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+    }
+
+    .mu-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--club-accent, #da291c);
+      margin-bottom: 10px;
+    }
+
+    html.dark .mu-label {
+      color: var(--club-accent-dark, #ff6b61);
+    }
+
+    .mu-club {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mu-club+.mu-club {
+      margin-top: 6px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .mu-match {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .mu-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 64px;
+      min-width: 0;
+    }
+
+    .mu-team img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .mu-team span {
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text);
+      line-height: 1.25;
+      max-width: 100%;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .mu-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .mu-score {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .mu-vs {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .mu-meta {
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-2);
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    .mu-meta .venue {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .mu-empty,
+    .mu-loading {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      padding: 8px 0 2px;
+    }
+
+    .mu-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .2s, background .2s;
+    }
+
+    .mu-link:hover {
+      border-color: color-mix(in srgb, var(--club-accent, #da291c) 35%, transparent);
+      background: var(--hover);
+    }
+
+    @media (max-width: 1100px) {
+      .mu-panel {
+        display: none;
+      }
+    }
+
+    @media (max-height: 820px) {
+      .mu-panel {
+        max-height: calc(100vh - 126px);
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+    }
+
     @media (max-width: 800px) {
       .footer {
         padding: 12px 16px;
@@ -497,6 +692,49 @@
 </head>
 
 <body>
+  <aside class="mu-panel" id="muPanel" aria-label="足球赛况">
+    <div class="mu-club" style="--club-accent:#da291c;--club-accent-dark:#ff6b61">
+      <div class="mu-head">
+        <img class="mu-crest" src="https://a.espncdn.com/i/teamlogos/soccer/500/360.png" alt="曼联" width="28"
+          height="28" />
+        <div class="mu-head-text">
+          <div class="mu-title">Manchester United</div>
+          <div class="mu-sub">Premier League</div>
+        </div>
+      </div>
+      <a class="mu-block mu-link" id="muLast"
+        href="https://www.premierleague.com/en/clubs/1/Manchester-United/fixtures-results" target="_blank"
+        rel="noopener">
+        <div class="mu-label">上场比分</div>
+        <div class="mu-loading">加载中…</div>
+      </a>
+      <a class="mu-block mu-link" id="muNext"
+        href="https://www.premierleague.com/en/clubs/1/Manchester-United/fixtures-results" target="_blank"
+        rel="noopener">
+        <div class="mu-label">下场预告</div>
+        <div class="mu-loading">加载中…</div>
+      </a>
+    </div>
+    <div class="mu-club" style="--club-accent:#dc052d;--club-accent-dark:#ff5a72">
+      <div class="mu-head">
+        <img class="mu-crest" src="https://a.espncdn.com/i/teamlogos/soccer/500/132.png" alt="拜仁" width="28"
+          height="28" />
+        <div class="mu-head-text">
+          <div class="mu-title">Bayern Munich</div>
+          <div class="mu-sub">Bundesliga</div>
+        </div>
+      </div>
+      <a class="mu-block mu-link" id="fcbLast" href="https://fcbayern.com/en/matches" target="_blank" rel="noopener">
+        <div class="mu-label">上场比分</div>
+        <div class="mu-loading">加载中…</div>
+      </a>
+      <a class="mu-block mu-link" id="fcbNext" href="https://fcbayern.com/en/matches" target="_blank" rel="noopener">
+        <div class="mu-label">下场预告</div>
+        <div class="mu-loading">加载中…</div>
+      </a>
+    </div>
+  </aside>
+
   <header class="top-bar">
     <button type="button" class="theme-btn" id="themeBtn" title="切换深色模式" aria-label="切换深色模式">
       <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -865,6 +1103,184 @@
     }
 
     initLocationWeather();
+
+    // —— 足球赛况：曼联英超 + 拜仁德甲（ESPN 公开接口）——
+    const ESPN_LOGO = id => `https://a.espncdn.com/i/teamlogos/soccer/500/${id}.png`;
+    const CLUBS = [
+      {
+        id: '360',
+        league: 'eng.1',
+        lastId: 'muLast',
+        nextId: 'muNext',
+        fallbackLink: 'https://www.premierleague.com/en/clubs/1/Manchester-United/fixtures-results',
+      },
+      {
+        id: '132',
+        league: 'ger.1',
+        lastId: 'fcbLast',
+        nextId: 'fcbNext',
+        fallbackLink: 'https://fcbayern.com/en/matches',
+      },
+    ];
+
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function scoreOf(c) {
+      const s = c?.score;
+      if (s == null) return null;
+      if (typeof s === 'object') return s.displayValue ?? (s.value != null ? String(s.value) : null);
+      return String(s);
+    }
+
+    function parseMatch(ev, fallbackLink) {
+      const comp = ev.competitions?.[0];
+      if (!comp) return null;
+      const home = comp.competitors?.find(c => c.homeAway === 'home');
+      const away = comp.competitors?.find(c => c.homeAway === 'away');
+      if (!home || !away) return null;
+      const state = comp.status?.type?.state || ev.status?.type?.state || '';
+      const completed = !!(comp.status?.type?.completed || ev.status?.type?.completed);
+      return {
+        id: ev.id,
+        date: new Date(comp.date || ev.date),
+        state,
+        finished: state === 'post' || completed,
+        live: state === 'in',
+        home: {
+          id: home.team.id,
+          name: home.team.shortDisplayName || home.team.displayName,
+          logo: home.team.logo || ESPN_LOGO(home.team.id),
+          score: scoreOf(home),
+        },
+        away: {
+          id: away.team.id,
+          name: away.team.shortDisplayName || away.team.displayName,
+          logo: away.team.logo || ESPN_LOGO(away.team.id),
+          score: scoreOf(away),
+        },
+        venue: comp.venue?.fullName || '',
+        statusText: comp.status?.type?.shortDetail || ev.status?.type?.shortDetail || '',
+        link: ev.links?.find(l => l.rel?.includes('summary'))?.href || fallbackLink,
+      };
+    }
+
+    function fmtMatchDate(d) {
+      if (!(d instanceof Date) || Number.isNaN(d.getTime())) return '—';
+      const sh = new Date(d.getTime() + 8 * 3600 * 1000);
+      const y = sh.getUTCFullYear();
+      const m = sh.getUTCMonth() + 1;
+      const day = sh.getUTCDate();
+      const w = WEEK[sh.getUTCDay()];
+      const hh = pad(sh.getUTCHours());
+      const mm = pad(sh.getUTCMinutes());
+      return `${y}/${m}/${day} 周${w} ${hh}:${mm}`;
+    }
+
+    function ymd(d) {
+      return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}`;
+    }
+
+    function renderMatchBlock(el, match, mode) {
+      if (!match) {
+        el.innerHTML = `
+          <div class="mu-label">${mode === 'last' ? '上场比分' : '下场预告'}</div>
+          <div class="mu-empty">${mode === 'last' ? '暂无上场赛果' : '暂无下场赛程'}</div>
+        `;
+        return;
+      }
+      el.href = match.link;
+      const center = mode === 'last' || match.live
+        ? `<div class="mu-score">${esc(match.home.score ?? '-')} : ${esc(match.away.score ?? '-')}</div>`
+        : `<div class="mu-vs">VS</div>`;
+      const note = mode === 'last'
+        ? (match.statusText || 'FT')
+        : (match.live ? (match.statusText || 'LIVE') : '未开赛');
+      el.innerHTML = `
+        <div class="mu-label">${mode === 'last' ? '上场比分' : '下场预告'}</div>
+        <div class="mu-match">
+          <div class="mu-team">
+            <img src="${esc(match.home.logo)}" alt="" width="32" height="32" loading="lazy" />
+            <span title="${esc(match.home.name)}">${esc(match.home.name)}</span>
+          </div>
+          <div class="mu-center">${center}</div>
+          <div class="mu-team">
+            <img src="${esc(match.away.logo)}" alt="" width="32" height="32" loading="lazy" />
+            <span title="${esc(match.away.name)}">${esc(match.away.name)}</span>
+          </div>
+        </div>
+        <div class="mu-meta">
+          <div>${esc(fmtMatchDate(match.date))} · ${esc(note)}</div>
+          ${match.venue ? `<div class="venue">${esc(match.venue)}</div>` : ''}
+        </div>
+      `;
+    }
+
+    async function fetchJson(url) {
+      const res = await fetch(url, {cache: 'no-store'});
+      if (!res.ok) throw new Error('http ' + res.status);
+      return res.json();
+    }
+
+    function clubApi(league) {
+      return `https://site.api.espn.com/apis/site/v2/sports/soccer/${league}`;
+    }
+
+    async function fetchClubMatches(club) {
+      const api = clubApi(club.league);
+      const board = await fetchJson(`${api}/scoreboard`);
+      const seasonYear = board.season?.year || new Date().getUTCFullYear();
+      const start = new Date();
+      const end = new Date(start.getTime() + 45 * 86400000);
+
+      const [curData, prevData, boardData] = await Promise.all([
+        fetchJson(`${api}/teams/${club.id}/schedule?season=${seasonYear}`).catch(() => ({events: []})),
+        fetchJson(`${api}/teams/${club.id}/schedule?season=${seasonYear - 1}`).catch(() => ({events: []})),
+        fetchJson(`${api}/scoreboard?dates=${ymd(start)}-${ymd(end)}`).catch(() => ({events: []})),
+      ]);
+
+      const fromBoard = (boardData.events || [])
+        .filter(e => (e.competitions?.[0]?.competitors || []).some(c => String(c.team?.id) === club.id));
+      const byId = new Map();
+      for (const ev of [...(prevData.events || []), ...(curData.events || []), ...fromBoard]) {
+        const m = parseMatch(ev, club.fallbackLink);
+        if (m) byId.set(m.id, m);
+      }
+      const all = [...byId.values()].sort((a, b) => a.date - b.date);
+      const now = Date.now();
+      const last = [...all]
+        .filter(m => m.finished || (m.home.score != null && m.date.getTime() <= now))
+        .sort((a, b) => b.date - a.date)[0] || null;
+      const live = all.find(m => m.live) || null;
+      const next = live || all
+        .filter(m => !m.finished && m.date.getTime() >= now - 3 * 3600000)
+        .sort((a, b) => a.date - b.date)[0] || null;
+      return {last, next};
+    }
+
+    async function loadClubFixtures() {
+      await Promise.all(CLUBS.map(async club => {
+        const lastEl = $(club.lastId);
+        const nextEl = $(club.nextId);
+        try {
+          const {last, next} = await fetchClubMatches(club);
+          renderMatchBlock(lastEl, last, 'last');
+          renderMatchBlock(nextEl, next, 'next');
+        } catch (err) {
+          console.warn('club fixtures failed', club.id, err);
+          lastEl.innerHTML = `<div class="mu-label">上场比分</div><div class="mu-empty">赛况获取失败</div>`;
+          nextEl.innerHTML = `<div class="mu-label">下场预告</div><div class="mu-empty">赛况获取失败</div>`;
+        }
+      }));
+    }
+
+    loadClubFixtures();
+    setInterval(loadClubFixtures, 15 * 60 * 1000);
   </script>
 </body>
 
