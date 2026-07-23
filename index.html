@@ -1013,30 +1013,66 @@
       return {name, offset: serverMs - mid, rtt: t1 - t0};
     }
 
+    // 小米返回 `var servertime=…`，用 script 注入绕过 CORS
+    function probeMiScript() {
+      return new Promise((resolve, reject) => {
+        const t0 = Date.now();
+        const had = Object.prototype.hasOwnProperty.call(window, 'servertime');
+        const prev = window.servertime;
+        const script = document.createElement('script');
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error('mi-timeout'));
+        }, 8000);
+
+        function cleanup() {
+          clearTimeout(timer);
+          script.remove();
+          if (had) window.servertime = prev;
+          else delete window.servertime;
+        }
+
+        script.onload = () => {
+          const t1 = Date.now();
+          const v = window.servertime;
+          cleanup();
+          try {
+            const serverMs = toMs(v);
+            const mid = Math.round((t0 + t1) / 2);
+            resolve({name: 'mi', offset: serverMs - mid, rtt: t1 - t0});
+          } catch (err) {
+            reject(err);
+          }
+        };
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('mi-load'));
+        };
+        script.src = `https://tptm.hd.mi.com/gettimestamp?_=${Date.now()}`;
+        document.head.appendChild(script);
+      });
+    }
+
     async function syncNetworkTime() {
       $('clock').textContent = '--:--:--';
       $('dateLine').textContent = '正在同步网络时间…';
 
-      // 实测 timeapi.io 会慢约 9 分钟，已剔除
+      // 仅用浏览器可跨域读取的源：
+      // - 苏宁/拼多多等国内时间戳接口无 CORS，fetch 会失败
+      // - maketimestamp 已 404
+      // - timeapi.io 实测慢约 10 分钟，已剔除
       const jobs = [
-        probeTime('suning', 'https://f.m.suning.com/api/ct.do', async res => {
-          const d = await res.json();
-          return d.currentTime;
-        }),
-        probeTime('maketimestamp', 'https://maketimestamp.com/api/v1/current?precision=milliseconds&timezone=Asia/Shanghai', async res => {
-          const d = await res.json();
-          return d.milliseconds;
-        }),
-        probeTime('pdd', 'https://api.pinduoduo.com/api/server/_stm', async res => {
-          const d = await res.json();
-          return d.server_time;
-        }),
-        probeTime('mi', 'https://tptm.hd.mi.com/gettimestamp', async res => {
+        probeTime('cloudflare', 'https://www.cloudflare.com/cdn-cgi/trace', async res => {
           const txt = await res.text();
-          const m = txt.match(/(\d{10,13})/);
-          if (!m) throw new Error('mi-parse');
-          return m[1];
+          const m = txt.match(/ts=([\d.]+)/);
+          if (!m) throw new Error('cf-parse');
+          return Number(m[1]) * 1000;
         }),
+        probeTime('unixcalc', 'https://unixcalculator.com/api/v1/convert', async res => {
+          const d = await res.json();
+          return d.unix.milliseconds;
+        }),
+        probeMiScript(),
       ];
 
       const results = await Promise.allSettled(jobs);
