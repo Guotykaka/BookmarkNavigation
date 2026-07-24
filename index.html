@@ -1322,16 +1322,13 @@
       // - 苏宁/拼多多等国内时间戳接口无 CORS，fetch 会失败
       // - maketimestamp 已 404
       // - timeapi.io 实测慢约 10 分钟，已剔除
+      // - unixcalculator.com 在 file:// 与多数环境无 CORS，已剔除
       const jobs = [
         probeTime('cloudflare', 'https://www.cloudflare.com/cdn-cgi/trace', async res => {
           const txt = await res.text();
           const m = txt.match(/ts=([\d.]+)/);
           if (!m) throw new Error('cf-parse');
           return Number(m[1]) * 1000;
-        }),
-        probeTime('unixcalc', 'https://unixcalculator.com/api/v1/convert', async res => {
-          const d = await res.json();
-          return d.unix.milliseconds;
         }),
         probeMiScript(),
       ];
