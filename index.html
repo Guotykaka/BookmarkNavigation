@@ -408,79 +408,58 @@
 
     .footer-meta {
       display: flex;
-      align-items: stretch;
-      gap: 0;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px 16px;
       margin-left: auto;
-      background: var(--surface);
-      border: 1px solid var(--footer-border);
-      border-radius: 999px;
-      padding: 6px 4px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted-2);
     }
 
     .meta-item {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 1px;
-      padding: 4px 18px;
+      align-items: baseline;
+      gap: 6px;
       min-width: 0;
-    }
-
-    .meta-item+.meta-item {
-      border-left: 1px solid var(--footer-border);
-    }
-
-    .meta-label {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      line-height: 1;
+      white-space: nowrap;
     }
 
     .meta-value {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
+      color: var(--muted-2);
       letter-spacing: -0.01em;
-      white-space: nowrap;
       font-variant-numeric: tabular-nums;
       line-height: 1.35;
     }
 
     .meta-value.clock {
       font-family: var(--font-display);
-      font-size: 15px;
-      font-weight: 600;
+      font-variant-numeric: tabular-nums;
       letter-spacing: 0.04em;
     }
 
     .meta-weather {
       display: flex;
       align-items: baseline;
-      gap: 8px;
+      gap: 6px;
     }
 
     .meta-weather .temp {
       font-family: var(--font-display);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      color: var(--muted-2);
     }
 
     .meta-weather .city,
     .meta-weather .desc {
-      font-size: 13px;
-      font-weight: 500;
       color: var(--muted-2);
     }
 
     .mu-panel {
       position: fixed;
       left: 16px;
-      top: 110px;
+      top: 50%;
+      transform: translateY(-50%);
       width: 248px;
       z-index: 5;
       display: flex;
@@ -658,17 +637,166 @@
       background: var(--hover);
     }
 
-    @media (max-width: 1100px) {
+    .mu-line {
+      display: none;
+    }
+
+    @media (max-height: 820px) and (min-width: 1801px) {
       .mu-panel {
-        display: none;
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        padding-right: 4px;
       }
     }
 
-    @media (max-height: 820px) {
+    @media (max-width: 1800px) {
+      .top-bar {
+        order: 0;
+      }
+
       .mu-panel {
-        max-height: calc(100vh - 126px);
-        overflow-y: auto;
-        padding-right: 4px;
+        order: 1;
+        position: static;
+        left: auto;
+        top: auto;
+        transform: none;
+        width: 100%;
+        z-index: 1;
+        padding: 0 16px 8px;
+        gap: 0;
+        max-height: none;
+        overflow: visible;
+      }
+
+      .main {
+        order: 2;
+      }
+
+      .footer {
+        order: 3;
+      }
+
+      .mu-club {
+        gap: 2px;
+        padding: 8px 0;
+        align-items: center;
+      }
+
+      .mu-club+.mu-club {
+        margin-top: 0;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+      }
+
+      .mu-head {
+        gap: 8px;
+        padding: 0 0 4px;
+        justify-content: center;
+      }
+
+      .mu-crest {
+        width: 18px;
+        height: 18px;
+      }
+
+      .mu-head-text {
+        text-align: center;
+      }
+
+      .mu-title {
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .mu-sub {
+        display: none;
+      }
+
+      .mu-block {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 3px 0;
+      }
+
+      .mu-link:hover {
+        background: transparent;
+        border-color: transparent;
+        opacity: .75;
+      }
+
+      .mu-label,
+      .mu-match,
+      .mu-meta,
+      .mu-empty,
+      .mu-loading {
+        display: none;
+      }
+
+      .mu-line {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px 8px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.35;
+        min-width: 0;
+        text-align: center;
+      }
+
+      .mu-line-tag {
+        flex-shrink: 0;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--club-accent, #da291c);
+      }
+
+      html.dark .mu-line-tag {
+        color: var(--club-accent-dark, #ff6b61);
+      }
+
+      .mu-line img {
+        width: 14px;
+        height: 14px;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+
+      .mu-line-name {
+        max-width: 7.5em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .mu-line-score,
+      .mu-line-vs {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+        flex-shrink: 0;
+      }
+
+      .mu-line-score {
+        font-size: 13px;
+      }
+
+      .mu-line-vs {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .mu-line-meta {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 500;
       }
     }
 
@@ -685,18 +813,7 @@
       .footer-meta {
         width: 100%;
         margin-left: 0;
-        border-radius: 14px;
-        flex-direction: column;
-        padding: 4px 0;
-      }
-
-      .meta-item+.meta-item {
-        border-left: none;
-        border-top: 1px solid var(--footer-border);
-      }
-
-      .meta-item {
-        padding: 10px 16px;
+        justify-content: flex-start;
       }
     }
   </style>
@@ -718,12 +835,14 @@
         rel="noopener">
         <div class="mu-label">上场比分</div>
         <div class="mu-loading">加载中…</div>
+        <div class="mu-line"><span class="mu-line-tag">上场</span><span class="mu-line-meta">加载中…</span></div>
       </a>
       <a class="mu-block mu-link" id="muNext"
         href="https://www.premierleague.com/en/clubs/1/Manchester-United/fixtures-results" target="_blank"
         rel="noopener">
         <div class="mu-label">下场预告</div>
         <div class="mu-loading">加载中…</div>
+        <div class="mu-line"><span class="mu-line-tag">下场</span><span class="mu-line-meta">加载中…</span></div>
       </a>
     </div>
     <div class="mu-club" style="--club-accent:#dc052d;--club-accent-dark:#ff5a72">
@@ -738,10 +857,12 @@
       <a class="mu-block mu-link" id="fcbLast" href="https://fcbayern.com/en/matches" target="_blank" rel="noopener">
         <div class="mu-label">上场比分</div>
         <div class="mu-loading">加载中…</div>
+        <div class="mu-line"><span class="mu-line-tag">上场</span><span class="mu-line-meta">加载中…</span></div>
       </a>
       <a class="mu-block mu-link" id="fcbNext" href="https://fcbayern.com/en/matches" target="_blank" rel="noopener">
         <div class="mu-label">下场预告</div>
         <div class="mu-loading">加载中…</div>
+        <div class="mu-line"><span class="mu-line-tag">下场</span><span class="mu-line-meta">加载中…</span></div>
       </a>
     </div>
   </aside>
@@ -798,18 +919,15 @@
     </div>
     <div class="footer-meta">
       <div class="meta-item">
-        <span class="meta-label">北京时间</span>
-        <span class="meta-value clock" id="clock">00:00:00</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">日期</span>
-        <span class="meta-value" id="dateLine">—</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">天气</span>
         <div class="meta-weather" id="weatherLine">
           <span class="city">定位中</span>
         </div>
+      </div>
+      <div class="meta-item">
+        <span class="meta-value" id="dateLine">—</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-value clock" id="clock">00:00:00</span>
       </div>
     </div>
   </footer>
@@ -820,11 +938,8 @@
       {id: 'google', name: 'Google', color: '#4285f4', text: 'G', url: 'https://www.google.com/search?q='},
       {id: 'bing', name: '必应', color: '#00809d', text: 'B', url: 'https://www.bing.com/search?q='},
       {id: 'perplexity', name: 'Perplexity', color: '#20808d', text: 'P', url: 'https://www.perplexity.ai/search?q='},
-      {id: 'chatgpt', name: 'ChatGPT', color: '#10a37f', text: 'GPT', url: 'https://chatgpt.com/?hints=search&q='},
+      {id: 'chatgpt', name: 'ChatGPT', color: '#10a37f', text: 'G', url: 'https://chatgpt.com/?hints=search&q='},
       {id: 'metaso', name: '秘塔AI', color: '#1a1a1a', text: '秘', url: 'https://metaso.cn/?q='},
-      {id: 'gemini', name: 'Gemini', color: '#8e75b2', text: 'Ge', url: 'https://www.google.com/search?udm=50&q='},
-      {id: 'copilot', name: 'Copilot', color: '#0078d4', text: 'C', url: 'https://www.bing.com/chat?q='},
-      {id: 'felo', name: 'Felo', color: '#6366f1', text: 'F', url: 'https://felo.ai/search?q='},
     ];
 
     const NAV_GROUPS = [
@@ -837,15 +952,26 @@
           {name: '爱奇艺', text: '爱', color: '#00cc36', url: 'https://www.iqiyi.com'},
           {name: '优酷', text: '优', color: '#1a1a1a', url: 'https://www.youku.com'},
           {name: '腾讯视频', text: '腾', color: '#ff6022', url: 'https://v.qq.com'},
-          {name: '豆包', text: '豆', color: '#2db87a', url: 'https://www.doubao.com'},
           {name: '微博', text: '微', color: '#e6162d', url: 'https://weibo.com'},
           {name: '淘宝', text: '淘', color: '#ff5000', url: 'https://www.taobao.com'},
-          {name: 'Kimi', text: 'K', color: '#1a1a1a', url: 'https://www.kimi.com'},
-          {name: 'DeepSeek', text: 'DS', color: '#4d6bfe', url: 'https://chat.deepseek.com'},
           {name: '百度翻译', text: '译', color: '#2932e1', url: 'https://fanyi.baidu.com'},
           {name: '英超', text: 'PL', color: '#37003c', url: 'https://www.premierleague.com/en'},
           {name: '小红书', text: '红', color: '#ff2442', url: 'https://www.xiaohongshu.com'},
           {name: '虎扑', text: '虎', color: '#c40000', url: 'https://www.hupu.com'},
+        ],
+      },
+      {
+        title: 'AI',
+        items: [
+          {name: 'ChatGPT', text: 'GPT', color: '#10a37f', url: 'https://chatgpt.com', desc: 'OpenAI · 全球最主流的对话式 AI 助手'},
+          {name: 'Gemini', text: 'Ge', color: '#8e75b2', url: 'https://gemini.google.com/', desc: 'Google · 谷歌多模态 AI 助手'},
+          {name: '豆包', text: '豆', color: '#2db87a', url: 'https://www.doubao.com', desc: '字节跳动 · 国内月活领先的对话 AI'},
+          {name: 'Copilot', text: 'C', color: '#0078d4', url: 'https://copilot.microsoft.com', desc: 'Microsoft · 微软办公与搜索 AI 助手'},
+          {name: 'DeepSeek', text: 'DS', color: '#4d6bfe', url: 'https://chat.deepseek.com', desc: '深度求索 · 国产开源大模型对话'},
+          {name: 'Kimi', text: 'K', color: '#1a1a1a', url: 'https://www.kimi.com', desc: '月之暗面 · 擅长长文本的 AI 助手'},
+          {name: 'Perplexity', text: 'P', color: '#20808d', url: 'https://www.perplexity.ai', desc: 'Perplexity AI · 带引用来源的 AI 搜索'},
+          {name: '秘塔AI', text: '秘', color: '#1a1a1a', url: 'https://metaso.cn', desc: '秘塔科技 · 国产 AI 搜索引擎'},
+          {name: 'Felo', text: 'F', color: '#6366f1', url: 'https://felo.ai', desc: 'Felo · 多语种 AI 搜索'},
         ],
       },
       {
@@ -916,10 +1042,11 @@
     function renderNavItem(n) {
       const text = n.text || n.name.charAt(0);
       const long = text.length >= 3 ? ' long' : '';
+      const tip = n.desc || n.name;
       return `
-        <a class="nav-item" href="${n.url}" target="_blank" rel="noopener">
+        <a class="nav-item" href="${n.url}" target="_blank" rel="noopener" title="${tip}">
           <div class="nav-icon initial${long}" style="background:${n.color || '#5f6368'}">${text}</div>
-          <span class="nav-name" title="${n.name}">${n.name}</span>
+          <span class="nav-name">${n.name}</span>
         </a>
       `;
     }
@@ -1337,22 +1464,29 @@
     }
 
     function renderMatchBlock(el, match, mode) {
+      const tag = mode === 'last' ? '上场' : '下场';
+      const label = mode === 'last' ? '上场比分' : '下场预告';
       if (!match) {
         el.innerHTML = `
-          <div class="mu-label">${mode === 'last' ? '上场比分' : '下场预告'}</div>
+          <div class="mu-label">${label}</div>
           <div class="mu-empty">${mode === 'last' ? '暂无上场赛果' : '暂无下场赛程'}</div>
+          <div class="mu-line"><span class="mu-line-tag">${tag}</span><span class="mu-line-meta">${mode === 'last' ? '暂无上场赛果' : '暂无下场赛程'}</span></div>
         `;
         return;
       }
       el.href = match.link;
-      const center = mode === 'last' || match.live
+      const scored = mode === 'last' || match.live;
+      const center = scored
         ? `<div class="mu-score">${esc(match.home.score ?? '-')} : ${esc(match.away.score ?? '-')}</div>`
         : `<div class="mu-vs">VS</div>`;
       const note = mode === 'last'
         ? (match.statusText || 'FT')
         : (match.live ? (match.statusText || 'LIVE') : '未开赛');
+      const lineMid = scored
+        ? `<span class="mu-line-score">${esc(match.home.score ?? '-')} : ${esc(match.away.score ?? '-')}</span>`
+        : `<span class="mu-line-vs">vs</span>`;
       el.innerHTML = `
-        <div class="mu-label">${mode === 'last' ? '上场比分' : '下场预告'}</div>
+        <div class="mu-label">${label}</div>
         <div class="mu-match">
           <div class="mu-team">
             <img src="${esc(match.home.logo)}" alt="" width="32" height="32" loading="lazy" />
@@ -1367,6 +1501,15 @@
         <div class="mu-meta">
           <div>${esc(fmtMatchDate(match.date))} · ${esc(note)}</div>
           ${match.venue ? `<div class="venue">${esc(match.venue)}</div>` : ''}
+        </div>
+        <div class="mu-line">
+          <span class="mu-line-tag">${tag}</span>
+          <img src="${esc(match.home.logo)}" alt="" width="14" height="14" loading="lazy" />
+          <span class="mu-line-name" title="${esc(match.home.name)}">${esc(match.home.name)}</span>
+          ${lineMid}
+          <img src="${esc(match.away.logo)}" alt="" width="14" height="14" loading="lazy" />
+          <span class="mu-line-name" title="${esc(match.away.name)}">${esc(match.away.name)}</span>
+          <span class="mu-line-meta">${esc(fmtMatchDate(match.date))} · ${esc(note)}</span>
         </div>
       `;
     }
@@ -1423,8 +1566,8 @@
           renderMatchBlock(nextEl, next, 'next');
         } catch (err) {
           console.warn('club fixtures failed', club.id, err);
-          lastEl.innerHTML = `<div class="mu-label">上场比分</div><div class="mu-empty">赛况获取失败</div>`;
-          nextEl.innerHTML = `<div class="mu-label">下场预告</div><div class="mu-empty">赛况获取失败</div>`;
+          lastEl.innerHTML = `<div class="mu-label">上场比分</div><div class="mu-empty">赛况获取失败</div><div class="mu-line"><span class="mu-line-tag">上场</span><span class="mu-line-meta">赛况获取失败</span></div>`;
+          nextEl.innerHTML = `<div class="mu-label">下场预告</div><div class="mu-empty">赛况获取失败</div><div class="mu-line"><span class="mu-line-tag">下场</span><span class="mu-line-meta">赛况获取失败</span></div>`;
         }
       }));
     }
