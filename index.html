@@ -230,6 +230,15 @@
       font-size: 10px;
       font-weight: var(--fw-med);
       color: #fff;
+      overflow: hidden;
+      background: var(--hover);
+      flex-shrink: 0;
+    }
+
+    .engine-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .search-input {
@@ -399,6 +408,16 @@
       font-weight: var(--fw-med);
       color: #fff;
       flex-shrink: 0;
+    }
+
+    .nav-icon img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    html.dark .nav-icon:not(.initial) {
+      background: #3c4043;
     }
 
     .nav-icon.initial {
@@ -1050,21 +1069,85 @@
     const searchForm = $('searchForm');
     const navSection = $('navSection');
 
+    const LOCAL_ICONS = {
+      'baidu.com': 'icons/baidu.com.ico',
+      'bbc.com': 'icons/bbc.com.ico',
+      'bilibili.com': 'icons/bilibili.com.ico',
+      'bing.com': 'icons/bing.com.ico',
+      'chat.deepseek.com': 'icons/chat.deepseek.com.png',
+      'chatgpt.com': 'icons/chatgpt.com.png',
+      'cnn.com': 'icons/cnn.com.png',
+      'copilot.microsoft.com': 'icons/copilot.microsoft.com.png',
+      'discord.com': 'icons/discord.com.ico',
+      'doubao.com': 'icons/doubao.com.png',
+      'douyin.com': 'icons/douyin.com.ico',
+      'facebook.com': 'icons/facebook.com.ico',
+      'fanyi.baidu.com': 'icons/fanyi.baidu.com.ico',
+      'felo.ai': 'icons/felo.ai.ico',
+      'gemini.google.com': 'icons/gemini.google.com.png',
+      'github.com': 'icons/github.com.svg',
+      'google.com': 'icons/google.com.png',
+      'heimabo.top': 'icons/heimabo.top.ico',
+      'hupu.com': 'icons/hupu.com.ico',
+      'instagram.com': 'icons/instagram.com.png',
+      'iqiyi.com': 'icons/iqiyi.com.ico',
+      'jable.tv': 'icons/jable.tv.ico',
+      'kimi.com': 'icons/kimi.com.ico',
+      'manhuabika.com': 'icons/manhuabika.com.png',
+      'metaso.cn': 'icons/metaso.cn.ico',
+      'neat-reader.cn': 'icons/neat-reader.cn.ico',
+      'npr.org': 'icons/npr.org.png',
+      'perplexity.ai': 'icons/perplexity.ai.ico',
+      'playno1.com': 'icons/playno1.com.ico',
+      'pornhub.com': 'icons/pornhub.com.ico',
+      'premierleague.com': 'icons/premierleague.com.png',
+      'readhub.cn': 'icons/readhub.cn.ico',
+      'reddit.com': 'icons/reddit.com.png',
+      'taobao.com': 'icons/taobao.com.png',
+      'tsmeow.com': 'icons/tsmeow.com.png',
+      'v.qq.com': 'icons/v.qq.com.ico',
+      'weibo.com': 'icons/weibo.com.ico',
+      'wikipedia.org': 'icons/wikipedia.org.ico',
+      'x.com': 'icons/x.com.png',
+      'xiaohongshu.com': 'icons/xiaohongshu.com.ico',
+      'youku.com': 'icons/youku.com.ico',
+      'youtube.com': 'icons/youtube.com.ico',
+      'zaobao.com': 'icons/zaobao.com.ico',
+      'zhihu.com': 'icons/zhihu.com.ico',
+    };
+
+    function faviconOf(siteUrl) {
+      try {
+        const host = new URL(siteUrl).hostname.toLowerCase();
+        return LOCAL_ICONS[host] || LOCAL_ICONS[host.replace(/^www\./, '')] || '';
+      } catch {
+        return '';
+      }
+    }
+
     function setEngine(engine) {
       currentEngine = engine;
-      engineIcon.style.background = engine.color;
-      engineIcon.textContent = engine.text;
+      const icon = faviconOf(engine.url);
+      engineIcon.style.background = icon ? 'transparent' : (engine.color || '#5f6368');
+      engineIcon.innerHTML = icon
+        ? `<img src="${icon}" alt="" width="18" height="18" onerror="const p=this.parentNode;this.remove();p.textContent='${engine.text}'">`
+        : engine.text;
       engineName.textContent = engine.name;
       engineDropdown.classList.remove('show');
     }
 
     function renderEngines() {
-      engineDropdown.innerHTML = ENGINES.map(e => `
+      engineDropdown.innerHTML = ENGINES.map(e => {
+        const icon = faviconOf(e.url);
+        const iconHtml = icon
+          ? `<img src="${icon}" alt="" width="18" height="18" onerror="const p=this.parentNode;this.remove();p.textContent='${e.text}'">`
+          : e.text;
+        return `
         <button type="button" class="engine-option ${e.id === currentEngine.id ? 'active' : ''}" data-id="${e.id}">
-          <span class="engine-icon" style="background:${e.color}">${e.text}</span>
+          <span class="engine-icon" style="background:${icon ? 'transparent' : e.color}">${iconHtml}</span>
           ${e.name}
-        </button>
-      `).join('');
+        </button>`;
+      }).join('');
     }
 
     let currentNavGroup = (() => {
@@ -1077,9 +1160,13 @@
       const text = n.text || n.name.charAt(0);
       const long = text.length >= 3 ? ' long' : '';
       const tip = n.desc || n.name;
+      const icon = faviconOf(n.url);
+      const iconHtml = icon
+        ? `<img src="${icon}" alt="" width="28" height="28" loading="lazy" onerror="const p=this.parentNode;this.remove();p.className='nav-icon initial${long}';p.style.background='${n.color || '#5f6368'}';p.textContent='${text}'">`
+        : text;
       return `
         <a class="nav-item" href="${n.url}" target="_blank" rel="noopener" title="${tip}">
-          <div class="nav-icon initial${long}" style="background:${n.color || '#5f6368'}">${text}</div>
+          <div class="nav-icon${icon ? '' : ` initial${long}`}"${icon ? '' : ` style="background:${n.color || '#5f6368'}"`}>${iconHtml}</div>
           <span class="nav-name">${n.name}</span>
         </a>
       `;
