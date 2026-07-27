@@ -36,6 +36,13 @@
       --fw: 400;
       --fw-med: 500;
       --fw-bold: 700;
+      /* radius scale */
+      --r-xs: 6px;
+      --r-sm: 10px;
+      --r-md: 14px;
+      --r-lg: 18px;
+      --r-xl: 22px;
+      --r-pill: 999px;
       /* compat aliases */
       --muted: var(--text-2);
       --muted-2: var(--text-2);
@@ -106,7 +113,7 @@
       cursor: pointer;
       width: 36px;
       height: 36px;
-      border-radius: 50%;
+      border-radius: var(--r-md);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -136,6 +143,7 @@
       flex-direction: column;
       align-items: center;
       padding-top: 12vh;
+      padding-bottom: 48px;
     }
 
     .logo {
@@ -184,11 +192,11 @@
     .search-box {
       width: 100%;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       border: 1px solid var(--border);
-      border-radius: 24px;
-      height: 46px;
-      padding: 0 8px 0 14px;
+      border-radius: var(--r-xl);
+      padding: 6px 10px 6px;
+      gap: 2px;
       transition: box-shadow .2s, background .2s, border-color .2s;
       background: var(--surface);
     }
@@ -199,15 +207,76 @@
       border-color: transparent;
     }
 
+    .search-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      font-size: var(--fs-md);
+      font-family: inherit;
+      font-weight: var(--fw);
+      line-height: 1.45;
+      padding: 8px 6px 4px;
+      min-height: 28px;
+      max-height: 120px;
+      background: transparent;
+      color: var(--text);
+      field-sizing: content;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(60, 64, 67, .28) transparent;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-2);
+      opacity: 1;
+    }
+
+    .search-input::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .search-input::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .search-input::-webkit-scrollbar-thumb {
+      background: rgba(60, 64, 67, .28);
+      border-radius: var(--r-xs);
+    }
+
+    .search-input::-webkit-scrollbar-button {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    html.dark .search-input {
+      scrollbar-color: rgba(255, 255, 255, .22) transparent;
+    }
+
+    html.dark .search-input::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .22);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 36px;
+    }
+
     .engine-btn {
       border: none;
       background: transparent;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 16px;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: var(--r-md);
       font-size: var(--fs-sm);
       font-weight: var(--fw);
       color: var(--text-2);
@@ -223,7 +292,7 @@
     .engine-icon {
       width: 18px;
       height: 18px;
-      border-radius: 50%;
+      border-radius: var(--r-xs);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -241,31 +310,51 @@
       object-fit: contain;
     }
 
-    .search-input {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-size: var(--fs-md);
-      font-family: inherit;
-      font-weight: var(--fw);
-      padding: 0 10px;
-      height: 100%;
-      background: transparent;
-      color: var(--text);
+    .search-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: auto;
     }
 
-    .search-input::placeholder {
+    .search-clear {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--r-sm);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
       color: var(--text-2);
+      padding: 0;
+      opacity: .72;
+      transition: opacity .15s, background .15s, color .15s;
+    }
+
+    .search-clear.show {
+      display: flex;
+    }
+
+    .search-clear:hover {
       opacity: 1;
+      color: var(--text);
+      background: var(--hover);
+    }
+
+    .search-clear svg {
+      display: block;
     }
 
     .search-submit {
       border: none;
       background: transparent;
       cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--r-sm);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -285,7 +374,7 @@
       top: calc(100% + 8px);
       left: 0;
       background: var(--surface);
-      border-radius: 8px;
+      border-radius: var(--r-md);
       box-shadow: 0 2px 10px var(--dropdown-shadow);
       padding: 8px 0;
       min-width: 180px;
@@ -339,7 +428,7 @@
       gap: 4px;
       padding: 4px;
       background: var(--hover);
-      border-radius: 999px;
+      border-radius: var(--r-pill);
     }
 
     .nav-tab {
@@ -350,7 +439,7 @@
       font-size: var(--fs-sm);
       font-weight: var(--fw);
       padding: 7px 14px;
-      border-radius: 999px;
+      border-radius: var(--r-pill);
       cursor: pointer;
       line-height: 1;
       transition: background .15s, color .15s;
@@ -386,7 +475,7 @@
       gap: 8px;
       width: 84px;
       padding: 12px 4px;
-      border-radius: 16px;
+      border-radius: var(--r-md);
       text-decoration: none;
       color: var(--text);
     }
@@ -398,7 +487,7 @@
     .nav-icon {
       width: 48px;
       height: 48px;
-      border-radius: 50%;
+      border-radius: var(--r-lg);
       background: var(--hover);
       display: flex;
       align-items: center;
@@ -513,30 +602,55 @@
       color: var(--text-2);
     }
 
+    .top-bar {
+      order: 0;
+    }
+
+    .main {
+      order: 1;
+    }
+
     .mu-panel {
-      position: fixed;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 248px;
-      z-index: 5;
+      order: 2;
+      position: static;
+      width: 100%;
+      margin: 8px 0 0;
+      padding: 32px 32px 24px;
+      z-index: 1;
       display: flex;
-      flex-direction: column;
-      gap: 14px;
-      pointer-events: none;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 48px;
+      box-sizing: border-box;
+      pointer-events: auto;
       font-size: var(--fs-sm);
       font-weight: var(--fw);
     }
 
-    .mu-panel>* {
-      pointer-events: auto;
+    .footer {
+      order: 3;
+    }
+
+    .mu-club {
+      display: grid;
+      grid-template-columns: 288px 288px;
+      grid-template-rows: auto 178px;
+      gap: 12px;
+      align-items: stretch;
+      flex: 0 0 auto;
     }
 
     .mu-head {
+      grid-column: 1 / -1;
       display: flex;
+      flex-direction: row;
       align-items: center;
+      justify-content: flex-start;
       gap: 10px;
-      padding: 0 4px;
+      padding: 0 2px 2px;
+      text-align: left;
+      min-height: 36px;
     }
 
     .mu-crest {
@@ -544,10 +658,16 @@
       height: 28px;
       object-fit: contain;
       flex-shrink: 0;
+      border-radius: var(--r-xs);
     }
 
     .mu-head-text {
       min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .mu-title {
@@ -555,21 +675,30 @@
       font-weight: var(--fw-med);
       color: var(--text);
       line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .mu-sub {
       font-size: var(--fs-xs);
       font-weight: var(--fw);
       color: var(--text-2);
-      margin-top: 2px;
+      margin-top: 0;
+      white-space: nowrap;
     }
 
     .mu-block {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 14px 12px;
+      border-radius: var(--r-md);
+      padding: 16px 16px 14px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+      width: 288px;
+      height: 178px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
 
     .mu-label {
@@ -577,22 +706,11 @@
       font-weight: var(--fw-med);
       color: var(--club-accent, #da291c);
       margin-bottom: 10px;
+      flex-shrink: 0;
     }
 
     html.dark .mu-label {
       color: var(--club-accent-dark, #ff6b61);
-    }
-
-    .mu-club {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .mu-club+.mu-club {
-      margin-top: 6px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
     }
 
     .mu-match {
@@ -600,21 +718,25 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      flex: 1;
+      min-height: 0;
     }
 
     .mu-team {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      width: 64px;
+      justify-content: center;
+      gap: 7px;
+      width: 66px;
       min-width: 0;
     }
 
     .mu-team img {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       object-fit: contain;
+      border-radius: var(--r-xs);
     }
 
     .mu-team span {
@@ -628,6 +750,7 @@
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
+      min-height: 2.5em;
     }
 
     .mu-center {
@@ -635,13 +758,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 2px;
       min-width: 0;
     }
 
     .mu-score {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 22px;
       font-weight: var(--fw-bold);
       font-variant-numeric: tabular-nums;
       color: var(--text);
@@ -649,22 +773,27 @@
     }
 
     .mu-vs {
-      font-size: var(--fs-sm);
+      font-size: var(--fs-md);
       font-weight: var(--fw-med);
       color: var(--text-2);
     }
 
     .mu-meta {
-      margin-top: 10px;
+      margin-top: auto;
+      padding-top: 10px;
       font-size: var(--fs-xs);
       font-weight: var(--fw);
       color: var(--text-2);
       text-align: center;
       line-height: 1.45;
+      flex-shrink: 0;
     }
 
     .mu-meta .venue {
       color: var(--text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .mu-empty,
@@ -673,10 +802,15 @@
       color: var(--text-2);
       text-align: center;
       padding: 8px 0 2px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .mu-link {
-      display: block;
+      display: flex;
+      flex-direction: column;
       text-decoration: none;
       color: inherit;
       transition: border-color .2s, background .2s;
@@ -691,74 +825,70 @@
       display: none;
     }
 
-    @media (max-height: 820px) and (min-width: 1801px) {
+    @media (max-width: 1200px) and (min-width: 801px) {
       .mu-panel {
-        max-height: calc(100vh - 48px);
-        overflow-y: auto;
-        padding-right: 4px;
-      }
-    }
-
-    @media (max-width: 1800px) {
-      .top-bar {
-        order: 0;
-      }
-
-      .mu-panel {
-        order: 1;
-        position: static;
-        left: auto;
-        top: auto;
-        transform: none;
-        width: 100%;
-        z-index: 1;
-        padding: 0 16px 8px;
-        gap: 0;
-        max-height: none;
-        overflow: visible;
-      }
-
-      .main {
-        order: 2;
-      }
-
-      .footer {
-        order: 3;
-      }
-
-      .mu-club {
-        gap: 2px;
-        padding: 8px 0;
-        align-items: center;
-      }
-
-      .mu-club+.mu-club {
-        margin-top: 0;
-        padding-top: 8px;
-        border-top: 1px solid var(--border);
-      }
-
-      .mu-head {
-        gap: 8px;
-        padding: 0 0 4px;
+        gap: 28px;
+        padding: 24px 20px 16px;
+        overflow-x: auto;
         justify-content: center;
       }
 
+      .mu-club {
+        grid-template-columns: 256px 256px;
+        grid-template-rows: auto 158px;
+        gap: 10px;
+      }
+
+      .mu-block {
+        width: 256px;
+        height: 158px;
+        padding: 14px 14px 12px;
+      }
+
       .mu-crest {
-        width: 18px;
-        height: 18px;
+        width: 26px;
+        height: 26px;
       }
 
-      .mu-head-text {
-        text-align: center;
+      .mu-team {
+        width: 60px;
       }
 
-      .mu-title {
-        font-size: var(--fs-xs);
-        font-weight: var(--fw-med);
+      .mu-team img {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .main {
+        padding-top: 8vh;
+        padding-bottom: 20px;
       }
 
-      .mu-sub {
+      .nav-section {
+        margin-bottom: 8px;
+      }
+
+      .mu-panel {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin: 0;
+        padding: 8px 12px 6px;
+        gap: 0 4px;
+        justify-content: stretch;
+      }
+
+      .mu-club {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+        gap: 4px;
+        padding: 6px 0;
+      }
+
+      .mu-head {
         display: none;
       }
 
@@ -767,7 +897,13 @@
         border: none;
         border-radius: 0;
         box-shadow: none;
-        padding: 3px 0;
+        padding: 2px 0;
+        height: auto;
+        display: block;
+      }
+
+      .mu-link {
+        display: block;
       }
 
       .mu-link:hover {
@@ -788,39 +924,41 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
-        gap: 6px 8px;
-        font-size: var(--fs-xs);
+        flex-wrap: nowrap;
+        gap: 12px;
+        font-size: 11px;
         font-weight: var(--fw);
         color: var(--text);
-        line-height: 1.35;
+        line-height: 1.3;
         min-width: 0;
         text-align: center;
+        padding: 6px 0;
       }
 
       .mu-line-tag {
-        flex-shrink: 0;
-        font-size: var(--fs-xs);
-        font-weight: var(--fw-med);
-        color: var(--club-accent, #da291c);
-      }
-
-      html.dark .mu-line-tag {
-        color: var(--club-accent-dark, #ff6b61);
+        display: none;
       }
 
       .mu-line img {
-        width: 14px;
-        height: 14px;
+        width: 26px;
+        height: 26px;
         object-fit: contain;
         flex-shrink: 0;
+        border-radius: var(--r-xs);
       }
 
       .mu-line-name {
-        max-width: 7.5em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        display: none;
+      }
+
+      .mu-line-mid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        min-width: 3.6em;
+        flex-shrink: 0;
       }
 
       .mu-line-score,
@@ -829,10 +967,11 @@
         font-weight: var(--fw-bold);
         font-variant-numeric: tabular-nums;
         flex-shrink: 0;
+        line-height: 1.15;
       }
 
       .mu-line-score {
-        font-size: var(--fs-sm);
+        font-size: 15px;
       }
 
       .mu-line-vs {
@@ -841,15 +980,16 @@
       }
 
       .mu-line-meta {
+        display: block;
         color: var(--text-2);
-        font-size: var(--fs-xs);
+        font-size: 11px;
         font-weight: var(--fw);
+        line-height: 1.2;
+        white-space: nowrap;
       }
-    }
 
-    @media (max-width: 800px) {
       .footer {
-        padding: 12px 16px;
+        padding: 14px 16px 24px;
         gap: 12px;
       }
 
@@ -915,7 +1055,7 @@
   </aside>
 
   <header class="top-bar">
-    <button type="button" class="theme-btn" id="themeBtn" title="切换深色模式" aria-label="切换深色模式">
+    <button type="button" class="theme-btn" id="themeBtn" aria-label="切换深色模式">
       <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
         <path
           d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 18a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zM3 11a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2H3zm17 0a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2h-1zM5.64 5.64a1 1 0 0 1 1.41 0l.71.71A1 1 0 0 1 6.34 9l-.71-.71a1 1 0 0 1 0-1.41zm12.02 12.02a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.71a1 1 0 0 1 0-1.41zM18.36 5.64a1 1 0 0 1 0 1.41L17.66 7.8a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.4 0zM6.34 16.24a1 1 0 0 1 0 1.41l-.71.71A1 1 0 1 1 4.22 17l.71-.71a1 1 0 0 1 1.41 0z" />
@@ -938,20 +1078,27 @@
 
     <div class="search-wrap">
       <form class="search-box" id="searchForm" autocomplete="off">
-        <button type="button" class="engine-btn" id="engineBtn" title="切换搜索引擎">
-          <span class="engine-icon" id="engineIcon" style="background:#2932e1">百</span>
-          <span id="engineName">百度</span>
-          <svg width="12" height="12" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M7 10l5 5 5-5z" />
-          </svg>
-        </button>
-        <input class="search-input" id="searchInput" type="text" placeholder="搜索一下" autofocus />
-        <button type="submit" class="search-submit" title="搜索">
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <path
-              d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-          </svg>
-        </button>
+        <textarea class="search-input" id="searchInput" rows="1" placeholder="搜索一下" autofocus></textarea>
+        <div class="search-bar">
+          <button type="button" class="engine-btn" id="engineBtn" aria-label="切换搜索引擎">
+            <span class="engine-icon" id="engineIcon" style="background:#2932e1">百</span>
+            <span id="engineName">百度</span>
+          </button>
+          <div class="search-actions">
+            <button type="button" class="search-clear" id="searchClear" aria-label="清除">
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor"
+                  d="M18.3 5.71 12 12.01 5.7 5.7 4.29 7.11 10.59 13.4 4.29 19.7 5.7 21.11 12 14.82l6.3 6.29 1.41-1.41-6.29-6.3 6.3-6.29z" />
+              </svg>
+            </button>
+            <button type="submit" class="search-submit" aria-label="搜索">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path
+                  d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </form>
       <div class="engine-dropdown" id="engineDropdown"></div>
     </div>
@@ -984,6 +1131,13 @@
       {id: 'baidu', name: '百度', color: '#2932e1', text: '百', url: 'https://www.baidu.com/s?wd='},
       {id: 'google', name: 'Google', color: '#4285f4', text: 'G', url: 'https://www.google.com/search?q='},
       {id: 'bing', name: '必应', color: '#00809d', text: 'B', url: 'https://www.bing.com/search?q='},
+      {id: 'bilibili', name: 'B站', color: '#fb7299', text: 'B', url: 'https://search.bilibili.com/all?keyword='},
+      {id: 'zhihu', name: '知乎', color: '#0084ff', text: '知', url: 'https://www.zhihu.com/search?type=content&q='},
+      {id: 'xiaohongshu', name: '小红书', color: '#ff2442', text: '红', url: 'https://www.xiaohongshu.com/search_result?keyword='},
+      {id: 'wikipedia', name: '维基百科', color: '#636466', text: 'W', url: 'https://zh.wikipedia.org/w/index.php?search='},
+      {id: 'fanyi', name: '百度翻译', color: '#2932e1', text: '译', url: 'https://fanyi.baidu.com/#auto/zh/'},
+      {id: 'youdao', name: '有道', color: '#e1483f', text: '有', url: 'https://www.youdao.com/result?word='},
+      {id: 'deepl', name: 'DeepL', color: '#0f2b46', text: 'D', url: 'https://www.deepl.com/en/translator'},
       {id: 'perplexity', name: 'Perplexity', color: '#20808d', text: 'P', url: 'https://www.perplexity.ai/search?q='},
       {id: 'chatgpt', name: 'ChatGPT', color: '#10a37f', text: 'G', url: 'https://chatgpt.com/?hints=search&q='},
       {id: 'metaso', name: '秘塔AI', color: '#1a1a1a', text: '秘', url: 'https://metaso.cn/?q='},
@@ -1032,10 +1186,14 @@
           {name: 'Instagram', text: 'IG', color: '#e1306c', url: 'https://www.instagram.com'},
           {name: 'Facebook', text: 'FB', color: '#1877f2', url: 'https://www.facebook.com'},
           {name: 'Reddit', text: 'R', color: '#ff4500', url: 'https://www.reddit.com'},
+          {name: 'Pinterest', text: 'P', color: '#e60023', url: 'https://www.pinterest.com'},
           {name: 'Wikipedia', text: 'W', color: '#636466', url: 'https://www.wikipedia.org'},
           {name: 'Discord', text: 'DC', color: '#5865f2', url: 'https://discord.com'},
+          {name: 'Pixiv', text: 'P', color: '#0096fa', url: 'https://www.pixiv.net'},
           {name: 'Jable.tv', text: 'JAV', color: '#ff6b9d', url: 'https://jable.tv/'},
           {name: 'Pornhub', text: 'PH', color: '#ffa31a', url: 'https://www.pornhub.com'},
+          {name: 'xVideos', text: 'XV', color: '#c30b0e', url: 'https://www.xvideos.com'},
+          {name: 'xHamster', text: 'XH', color: '#f60', url: 'https://xhamster.com'},
           {name: '玩樂達人(香港节点)', text: '玩', color: '#e85d04', url: 'http://www.playno1.com/'},
           {name: '嗶咔漫畫', text: '咔', color: '#ED97B7', url: 'https://manhuabika.com/'},
         ],
@@ -1066,6 +1224,7 @@
     const engineIcon = $('engineIcon');
     const engineName = $('engineName');
     const searchInput = $('searchInput');
+    const searchClear = $('searchClear');
     const searchForm = $('searchForm');
     const navSection = $('navSection');
 
@@ -1073,12 +1232,14 @@
       'baidu.com': 'icons/baidu.com.ico',
       'bbc.com': 'icons/bbc.com.ico',
       'bilibili.com': 'icons/bilibili.com.ico',
+      'search.bilibili.com': 'icons/bilibili.com.ico',
       'bing.com': 'icons/bing.com.ico',
       'chat.deepseek.com': 'icons/chat.deepseek.com.png',
       'chatgpt.com': 'icons/chatgpt.com.png',
       'cnn.com': 'icons/cnn.com.png',
       'copilot.microsoft.com': 'icons/copilot.microsoft.com.png',
       'discord.com': 'icons/discord.com.ico',
+      'deepl.com': 'icons/deepl.com.ico',
       'doubao.com': 'icons/doubao.com.png',
       'douyin.com': 'icons/douyin.com.ico',
       'facebook.com': 'icons/facebook.com.ico',
@@ -1098,6 +1259,8 @@
       'neat-reader.cn': 'icons/neat-reader.cn.ico',
       'npr.org': 'icons/npr.org.png',
       'perplexity.ai': 'icons/perplexity.ai.ico',
+      'pinterest.com': 'icons/pinterest.com.svg',
+      'pixiv.net': 'icons/pixiv.net.ico',
       'playno1.com': 'icons/playno1.com.ico',
       'pornhub.com': 'icons/pornhub.com.ico',
       'premierleague.com': 'icons/premierleague.com.png',
@@ -1108,9 +1271,13 @@
       'v.qq.com': 'icons/v.qq.com.ico',
       'weibo.com': 'icons/weibo.com.ico',
       'wikipedia.org': 'icons/wikipedia.org.ico',
+      'zh.wikipedia.org': 'icons/wikipedia.org.ico',
       'x.com': 'icons/x.com.png',
+      'xhamster.com': 'icons/xhamster.com.ico',
       'xiaohongshu.com': 'icons/xiaohongshu.com.ico',
+      'xvideos.com': 'icons/xvideos.com.png',
       'youku.com': 'icons/youku.com.ico',
+      'youdao.com': 'icons/youdao.com.ico',
       'youtube.com': 'icons/youtube.com.ico',
       'zaobao.com': 'icons/zaobao.com.ico',
       'zhihu.com': 'icons/zhihu.com.ico',
@@ -1150,22 +1317,18 @@
       }).join('');
     }
 
-    let currentNavGroup = (() => {
-      const saved = localStorage.getItem('ergulum_nav_group');
-      const idx = NAV_GROUPS.findIndex(g => g.title === saved);
-      return idx >= 0 ? idx : 0;
-    })();
+    let currentNavGroup = 0;
 
     function renderNavItem(n) {
       const text = n.text || n.name.charAt(0);
       const long = text.length >= 3 ? ' long' : '';
-      const tip = n.desc || n.name;
+      const tip = n.desc ? ` title="${n.desc}"` : '';
       const icon = faviconOf(n.url);
       const iconHtml = icon
         ? `<img src="${icon}" alt="" width="28" height="28" loading="lazy" onerror="const p=this.parentNode;this.remove();p.className='nav-icon initial${long}';p.style.background='${n.color || '#5f6368'}';p.textContent='${text}'">`
         : text;
       return `
-        <a class="nav-item" href="${n.url}" target="_blank" rel="noopener" title="${tip}">
+        <a class="nav-item" href="${n.url}" target="_blank" rel="noopener"${tip}>
           <div class="nav-icon${icon ? '' : ` initial${long}`}"${icon ? '' : ` style="background:${n.color || '#5f6368'}"`}>${iconHtml}</div>
           <span class="nav-name">${n.name}</span>
         </a>
@@ -1190,15 +1353,46 @@
       const idx = Number(tab.dataset.idx);
       if (Number.isNaN(idx) || idx === currentNavGroup) return;
       currentNavGroup = idx;
-      localStorage.setItem('ergulum_nav_group', NAV_GROUPS[idx].title);
       renderNavs();
     });
 
     function doSearch() {
       const q = searchInput.value.trim();
       if (!q) {searchInput.focus(); return;}
-      window.open(currentEngine.url + encodeURIComponent(q), '_blank');
+      let url = currentEngine.url + encodeURIComponent(q);
+      if (currentEngine.id === 'deepl') {
+        // DeepL 不支持 URL 里写 auto，需指定语种；含中文则译英，否则译中
+        const pair = /[\u4e00-\u9fff]/.test(q) ? 'zh/en' : 'en/zh';
+        url = `https://www.deepl.com/en/translator#${pair}/` + encodeURIComponent(q);
+      }
+      window.open(url, '_blank');
     }
+
+    function resizeSearchInput() {
+      searchInput.style.height = 'auto';
+      const next = Math.min(searchInput.scrollHeight, 120);
+      searchInput.style.height = next + 'px';
+      searchInput.style.overflowY = searchInput.scrollHeight > 120 ? 'auto' : 'hidden';
+    }
+
+    function syncSearchClear() {
+      searchClear.classList.toggle('show', searchInput.value.length > 0);
+      resizeSearchInput();
+    }
+
+    searchInput.addEventListener('input', syncSearchClear);
+    searchInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        doSearch();
+      }
+    });
+
+    searchClear.addEventListener('click', () => {
+      searchInput.value = '';
+      syncSearchClear();
+      searchInput.focus();
+    });
 
     engineBtn.addEventListener('click', e => {
       e.stopPropagation();
@@ -1219,6 +1413,7 @@
       doSearch();
     });
 
+    syncSearchClear();
     setEngine(currentEngine);
     renderNavs();
 
@@ -1226,7 +1421,7 @@
     function setTheme(dark) {
       document.documentElement.classList.toggle('dark', dark);
       localStorage.setItem('ergulum_theme', dark ? 'dark' : 'light');
-      themeBtn.title = dark ? '切换浅色模式' : '切换深色模式';
+      themeBtn.setAttribute('aria-label', dark ? '切换浅色模式' : '切换深色模式');
     }
     themeBtn.addEventListener('click', () => {
       setTheme(!document.documentElement.classList.contains('dark'));
@@ -1590,6 +1785,16 @@
       return `${y}/${m}/${day} 周${w} ${hh}:${mm}`;
     }
 
+    function fmtMatchTime(d) {
+      if (!(d instanceof Date) || Number.isNaN(d.getTime())) return '—';
+      const sh = new Date(d.getTime() + 8 * 3600 * 1000);
+      const m = sh.getUTCMonth() + 1;
+      const day = sh.getUTCDate();
+      const hh = pad(sh.getUTCHours());
+      const mm = pad(sh.getUTCMinutes());
+      return `${m}/${day} ${hh}:${mm}`;
+    }
+
     function ymd(d) {
       return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}`;
     }
@@ -1637,10 +1842,12 @@
           <span class="mu-line-tag">${tag}</span>
           <img src="${esc(match.home.logo)}" alt="" width="14" height="14" loading="lazy" />
           <span class="mu-line-name" title="${esc(match.home.name)}">${esc(match.home.name)}</span>
-          ${lineMid}
+          <span class="mu-line-mid">
+            ${lineMid}
+            <span class="mu-line-meta">${esc(fmtMatchTime(match.date))}</span>
+          </span>
           <img src="${esc(match.away.logo)}" alt="" width="14" height="14" loading="lazy" />
           <span class="mu-line-name" title="${esc(match.away.name)}">${esc(match.away.name)}</span>
-          <span class="mu-line-meta">${esc(fmtMatchDate(match.date))} · ${esc(note)}</span>
         </div>
       `;
     }
